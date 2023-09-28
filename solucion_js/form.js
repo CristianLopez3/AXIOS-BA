@@ -38,16 +38,15 @@ document.getElementById('updateForm').addEventListener('submit', function (e) {
     const description = document.getElementById('description').value;
     const start = document.getElementById('start').value;
     const end = document.getElementById('end').value;
-    const creator = parseInt(localStorage.getItem("userId"));
+    const id = parseInt(localStorage.getItem("formId"));
     const token = localStorage.getItem("jwtToken");
 
     // Realizar la solicitud PUT para actualizar los datos del usuario
-    axios.put(`http://localhost:9999/form`, {
+    axios.put(`http://localhost:9999/form/${id}`, {
         title,
         description,
         start,
-        end,
-        creator
+        end
     }, {
         headers: {
             "Authorization": `Bearer ${token}`,
@@ -56,12 +55,12 @@ document.getElementById('updateForm').addEventListener('submit', function (e) {
     })
     .then(response => {
         // Manejar la respuesta exitosa, si es necesario
-        console.log('Formulario guardaddo correctamente:', response.data);
+        console.log('Formulario actualizado correctamente:', response.data);
         localStorage.setItem("formId", response.data.id);
         // Aquí puedes proporcionar retroalimentación al usuario, redireccionar, etc.
     })
     .catch(error => {
-        console.error('Error al guardar los datos del formulario:', error);
+        console.error('Error al actualizar los datos del formulario:', error);
         // Aquí puedes manejar errores y proporcionar retroalimentación al usuario si es necesario
     });
 });
