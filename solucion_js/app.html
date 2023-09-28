@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>aaaaaaaaaa</title>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body>
+
+<h1>Login</h1>
+
+<form id="loginForm">
+    <label for="email">Email:</label>
+    <input type="text" id="email" name="email" required><br><br>
+
+    <label for="password">Password:</label>
+    <input type="password" id="password" name="password" required><br><br>
+
+    <button type="submit">Login</button>
+</form>
+
+<script>
+    document.getElementById('loginForm').addEventListener('submit', function (e) {
+        e.preventDefault();
+
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+
+        // Realizar la solicitud de inicio de sesión
+        axios.post('http://localhost:9999/login/', {
+            email: email,
+            password: password
+        })
+        .then(response => {
+            const token = response.data.jwTtoken;
+
+            // Guardar el token en el almacenamiento local (localStorage)
+            localStorage.setItem('jwtToken', token);
+
+            // Realizar una solicitud GET para obtener una lista de usuarios
+            axios.get('http://localhost:9999/user', {
+                headers: {
+                    "Authorization": `Bearer ${token}`,
+                    "Content-type": "application/json"
+                }
+            })
+            .then(userResponse => {
+                console.log('Lista de Usuarios:', userResponse.data);
+            })
+            .catch(error => {
+                console.error('Error al obtener la lista de usuarios:', error);
+            });
+        })
+        .catch(error => {
+            console.error('Error de inicio de sesión:', error);
+        });
+    });
+</script>
+
+</body>
+</html>
